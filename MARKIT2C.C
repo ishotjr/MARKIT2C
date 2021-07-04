@@ -262,9 +262,11 @@ MENU StackMenu[] = {
 /**** TopMenu "hangs" all the previous menus off itself with MENU_PULLDOWN ****/
 MENU TopMenu[] = {
  { &menuBase,      (PFUNC) BaseMenu,     0, MENU_PULLDOWN },
- { &menuOperation, (PFUNC) OpMenu,       0, MENU_PULLDOWN },
+/*
+  { &menuOperation, (PFUNC) OpMenu,	  0, MENU_PULLDOWN },
  { &menuStack,     (PFUNC) StackMenu,    0, MENU_PULLDOWN },
- { &menuQuit,      DoQuit,               0 },
+*/
+  { &menuQuit,	    DoQuit,		  0 },
  { 0, 0, 0, 0}
 };
 
@@ -331,7 +333,7 @@ void ShowBase(void)
     case 10: basemsg = fkeyDec; break;
     case 16: basemsg = fkeyHex; break;
     }
-  (DrawText)(0,STACK_BOTTOM, basemsg,DRAW_NORM,FONT_LARGE);
+  (DrawText)(0,STACK_BOTTOM, basemsg,DRAW_NORM,FONT_SMALL);
 }
 
 
@@ -398,7 +400,7 @@ int ShowEntry(char far *ptr, int y)
   /* terminate string */
   buffer[sizeof(buffer)-1] = 0;
 
-  (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_LARGE);
+  (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL);
 }
 
 
