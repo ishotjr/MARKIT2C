@@ -28,7 +28,7 @@
 
 #define STACK_TOP     14
 #define STACK_BOTTOM 174
-#define STACK_LEFT    24 /* 112 */
+#define STACK_LEFT     8 /* 112 */
 
 char Target[80],Search[80],Dir[80],Answer[80];
 
@@ -346,7 +346,7 @@ void Cursor(int on)
      int 10h
 
      mov ax,0dc03h       ; move cursor
-     mov cx,640-16
+     mov cx,STACK_LEFT	 ; 640-16
      mov dx,STACK_TOP/*BOTTOM*/
      int 10h
 
@@ -384,11 +384,12 @@ long int PopStack(int *err)
 int ShowEntry(char far *ptr, int y)
 {
   char buffer[33];
-  int i,len;
+  int i,len,len2;
   char ch;
 
   /* Get length of string */
   for (len=0; ptr[len]; len++)  ;
+  len2 = len;
 
   /* Fill up buffer from back to front */
   for (i=sizeof(buffer)-2; i>=0; i--) {
@@ -400,7 +401,9 @@ int ShowEntry(char far *ptr, int y)
   /* terminate string */
   buffer[sizeof(buffer)-1] = 0;
 
-  (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL);
+  (DrawText)(STACK_LEFT+(len2*CHAR_WIDTH(FONT_SMALL)),y,buffer,DRAW_NORM,FONT_SMALL);
+
+  /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
 }
 
 
@@ -789,10 +792,15 @@ ProcessDigit:
           ClearRect(Wnd->x,Wnd->y,Wnd->w,Wnd->h);
           }
        if (Data&DRAW_TITLE) {
-         Rectangle(Wnd->x, Wnd->y, Wnd->w, TITLE_HEIGHT, 1, G_SOLIDFILL);
+	 Rectangle(Wnd->x, Wnd->y, Wnd->w, TITLE_HEIGHT, 1, G_SOLIDFILL);
+
          (DrawText)(Wnd->x+(Wnd->w>>1)-lstrlen(*(Wnd->Title))*(CHAR_WIDTH(FONT_NORM)/2),
-                    Wnd->y+1, *(Wnd->Title), DRAW_INVERT, FONT_SMALL);
-         }
+		    Wnd->y+1, *(Wnd->Title), DRAW_INVERT, FONT_SMALL);
+	 /*
+	 (DrawText)(Wnd->x-(Wnd->w>>1)+lstrlen(*(Wnd->Title))*(CHAR_WIDTH(FONT_NORM)/2),
+		    Wnd->y+1, *(Wnd->Title), DRAW_INVERT, FONT_SMALL);
+	 */
+		 }
        Redisplay(depth);
        ShowBase();
        break;
