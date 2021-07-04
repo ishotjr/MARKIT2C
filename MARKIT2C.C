@@ -445,6 +445,18 @@ int ShowChar(char c, int y)
 }
 
 
+int ShowAll()
+{
+  /* terminate string */
+  Stack[depth] = 0;
+  /*
+  (DrawText)(STACK_LEFT+(len2*CHAR_WIDTH(FONT_SMALL)),y,buffer,DRAW_NORM,FONT_SMALL);
+  */
+  /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
+  (DrawText)(STACK_LEFT,y,Stack,DRAW_NORM,FONT_SMALL);
+}
+
+
 
 char *FormatNum(unsigned long int num)
 {
