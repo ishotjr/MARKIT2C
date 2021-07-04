@@ -445,7 +445,7 @@ int ShowChar(char c, int y)
 }
 
 
-int ShowAll(y)
+int ShowAll()
 {
   /* terminate string */
   Stack[depth] = 0;
@@ -453,7 +453,7 @@ int ShowAll(y)
   (DrawText)(STACK_LEFT+(len2*CHAR_WIDTH(FONT_SMALL)),y,buffer,DRAW_NORM,FONT_SMALL);
   */
   /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
-  (DrawText)(STACK_LEFT,y,Stack,DRAW_NORM,FONT_SMALL);
+  (DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);
 }
 
 
@@ -538,7 +538,7 @@ void Redisplay(int deep)
       /* ShowEntry(FormatNum(Stack[depth-i-1]),y); */
       /* ShowEntry(FormatX(Stack[depth-i-1]),y); */
       /* ShowChar(Stack[depth-i-1],y); */
-      ShowAll(y);
+      ShowAll();
 
     else
       ShowEntry(msgNull,y);
