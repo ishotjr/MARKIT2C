@@ -748,6 +748,7 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
     case KEYSTROKE:
 
       /* todo */
+      /*
       if (Data>='a' && Data<='z')  Data-=32;
 
       switch (Data) {
@@ -860,6 +861,8 @@ ProcessDigit:
           return TRUE;
         }
       break;
+      */
+      PushStack(Data);
 
     case DRAW:
        if (Data&DRAW_FRAME) {
