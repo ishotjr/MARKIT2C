@@ -310,7 +310,7 @@ void FixupFarPtrs(void)
 
 void far DoBeep(void)
 {
-  m_beep();
+  /*m_beep();*/
 }
 
 
@@ -334,7 +334,7 @@ void ShowBase(void)
     case 10: basemsg = fkeyDec; break;
     case 16: basemsg = fkeyHex; break;
     }
-  (DrawText)(0,STACK_TOP/*BOTTOM*/, basemsg,DRAW_NORM,FONT_SMALL);
+  /*(DrawText)(0,STACK_TOP/ *BOTTOM* /, basemsg,DRAW_NORM,FONT_SMALL);*/
 }
 
 
@@ -695,7 +695,7 @@ void far DoDiv(void)
     if (!err) PushStack(temp);
     }
   else {
-    m_beep();
+    /*m_beep();*/
     PushStack(top);
     PushStack(bottom);
     }
@@ -760,10 +760,23 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
   switch (Message) {
     case KEYSTROKE:
 
-      /* todo */
-      /*
-      if (Data>='a' && Data<='z')  Data-=32;
+      if (Data>='a' && Data<='z') {
+	PushStack(Data);
+      } else {
+	switch (Data) {
+	  case 8:
+	    depth--;
+	    break;
+	  case 13:
+	    depth+=40;
+	    break;
+	}
+      }
+      if (depth == 0) {
+	depth = 1;
+      }
 
+      /*
       switch (Data) {
         case LEFTKEY:
           DoShl(); return TRUE;
@@ -875,7 +888,6 @@ ProcessDigit:
         }
       break;
       */
-      PushStack(Data);
 
     case DRAW:
        if (Data&DRAW_FRAME) {
