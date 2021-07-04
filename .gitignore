@@ -1,0 +1,11 @@
+# Ignore build and PWB generated files
+TEMPMARK*
+*.BAK
+*.OBJ
+*.MAP
+*.STS
+
+*.ERR
+NM*
+
+IGNORE
