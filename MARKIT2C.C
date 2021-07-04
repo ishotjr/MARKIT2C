@@ -172,7 +172,7 @@ void far DoDup(void);
 void Uninitialize(void);
 
 
-#define STACK_DEPTH 20
+#define STACK_DEPTH 80*40
 
 
 /******** Global state data *******/
@@ -181,7 +181,8 @@ CAPBLOCK CapData;         /* CAP application data block */
 
 
 /* Stuff we save in the .ENV */
-long int Stack[STACK_DEPTH];
+/*long int*/
+char Stack[STACK_DEPTH];
 int depth=0;
 int Base=10;
 
@@ -370,12 +371,13 @@ void Cursor(int on)
 }
 
 
-void PushStack(long int num)
+void PushStack(/*long int*/ char num)
 {
   if (depth<STACK_DEPTH)  Stack[depth++] = num;
 }
 
-long int PopStack(int *err)
+/*long int*/
+char PopStack(int *err)
 {
   if (!depth) *err=1;
          else return Stack[--depth];
@@ -405,6 +407,43 @@ int ShowEntry(char far *ptr, int y)
 
   /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
 }
+
+
+int ShowChar(char c, int y)
+{
+  char buffer[33];
+  int i,len,len2;
+  char ch;
+
+  len2 = 1;
+
+  /* Get length of string */
+  /*
+  for (len=0; ptr[len]; len++)  ;
+  len2 = len;
+  */
+
+  /* Fill up buffer from back to front */
+  /*
+  for (i=sizeof(buffer)-2; i>=0; i--) {
+    if (len) ch = ptr[--len];
+        else ch = ' ';
+    buffer[i] = ch;
+    }
+  */
+  /* terminate string */
+  /*
+  buffer[sizeof(buffer)-1] = 0;
+  */
+
+  buffer[0] = c;
+  buffer[1] = 0;
+
+  (DrawText)(STACK_LEFT+(len2*CHAR_WIDTH(FONT_SMALL)),y,buffer,DRAW_NORM,FONT_SMALL);
+
+  /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
+}
+
 
 
 char *FormatNum(unsigned long int num)
@@ -484,8 +523,9 @@ void Redisplay(int deep)
   y = STACK_TOP; /*BOTTOM;*/
   for (i=0; i<=deep; i++) {
     if (i<depth)
-      ShowEntry(FormatNum(Stack[depth-i-1]),y);
+      /* ShowEntry(FormatNum(Stack[depth-i-1]),y); */
       /* ShowEntry(FormatX(Stack[depth-i-1]),y); */
+      ShowChar(Stack[depth-i-1],y);
 
     else
       ShowEntry(msgNull,y);
@@ -706,6 +746,8 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
 {
   switch (Message) {
     case KEYSTROKE:
+
+      /* todo */
       if (Data>='a' && Data<='z')  Data-=32;
 
       switch (Data) {
@@ -959,7 +1001,8 @@ void Initialize(void)
 
   m_reg_app_name(msgTestApp);
 
-  LoadENV();
+  /* TODO: restore */
+  /*LoadENV();*/
   CreateMainView();  /* Now create the index view (it will display itself) */
   EnableClock(TRUE);
 }
