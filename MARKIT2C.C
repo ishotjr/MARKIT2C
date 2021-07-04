@@ -28,7 +28,7 @@
 
 #define STACK_TOP     14
 #define STACK_BOTTOM 174
-#define STACK_LEFT   112
+#define STACK_LEFT    24 /* 112 */
 
 char Target[80],Search[80],Dir[80],Answer[80];
 
@@ -333,7 +333,7 @@ void ShowBase(void)
     case 10: basemsg = fkeyDec; break;
     case 16: basemsg = fkeyHex; break;
     }
-  (DrawText)(0,STACK_BOTTOM, basemsg,DRAW_NORM,FONT_SMALL);
+  (DrawText)(0,STACK_TOP/*BOTTOM*/, basemsg,DRAW_NORM,FONT_SMALL);
 }
 
 
@@ -347,7 +347,7 @@ void Cursor(int on)
 
      mov ax,0dc03h       ; move cursor
      mov cx,640-16
-     mov dx,STACK_BOTTOM
+     mov dx,STACK_TOP/*BOTTOM*/
      int 10h
 
      mov ax,0dc04h       ; blink cursor
@@ -444,19 +444,19 @@ char *FormatNum(unsigned long int num)
 
 void Redisplay(int deep)
 {
-  int i,y;
+  int i,y=STACK_TOP;
 
   if (startnumber || (depth && !Stack[depth-1])) Cursor(0);
 
-  y = STACK_BOTTOM;
+  y = STACK_TOP; /*BOTTOM;*/
   for (i=0; i<=deep; i++) {
     if (i<depth)
       ShowEntry(FormatNum(Stack[depth-i-1]),y);
     else
       ShowEntry(msgNull,y);
-    y -= 16;
+    y /*-*/+= 16;
 
-    if (y<STACK_TOP)  return;
+    if (y>/*<*/STACK_BOTTOM/*TOP*/)	return;
     }
 }
 
