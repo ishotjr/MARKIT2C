@@ -32,8 +32,8 @@
 
 char Target[80],Search[80],Dir[80],Answer[80];
 
-char far *msgTestApp="Flx Calc";
-char far *msgAppTopLine="Flx/Dec/Oct/Bin Calculator";
+char far *msgTestApp="MarkIt2C";
+char far *msgAppTopLine="MarkIt Markdown Editor";
 
 char far *fkeyHex="Hex";
 char far *fkeyDec="Dec";
@@ -172,7 +172,7 @@ void far DoDup(void);
 void Uninitialize(void);
 
 
-#define STACK_DEPTH 32
+#define STACK_DEPTH 20
 
 
 /******** Global state data *******/
@@ -443,6 +443,36 @@ char *FormatNum(unsigned long int num)
   return buffer;
 }
 
+char *FormatX(unsigned long int num)
+{
+  static char buffer[33];
+  char *p=buffer;
+  int x,i;
+  int ch;
+
+  x = 0;
+
+  /* generate digits */
+  do {
+    ch = num % Base;
+    num /= Base;
+
+    ch+='0';
+    if (ch>'9')  ch+=7;
+    p[x++] = ch;
+  } while (num);
+
+  /* reverse them */
+  for (i=0; i<(x/2); i++) {
+    ch = p[i];
+    p[i] = p[x-i-1];
+    p[x-i-1] = ch;
+    }
+
+  p[x] = 0;
+  return buffer;
+}
+
 
 
 void Redisplay(int deep)
@@ -455,6 +485,8 @@ void Redisplay(int deep)
   for (i=0; i<=deep; i++) {
     if (i<depth)
       ShowEntry(FormatNum(Stack[depth-i-1]),y);
+      /* ShowEntry(FormatX(Stack[depth-i-1]),y); */
+
     else
       ShowEntry(msgNull,y);
     y /*-*/+= 16;
