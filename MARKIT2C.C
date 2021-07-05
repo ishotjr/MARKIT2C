@@ -28,7 +28,7 @@
 
 #define STACK_TOP     14
 #define STACK_BOTTOM 174
-#define STACK_LEFT     8 /* 112 */
+#define STACK_LEFT     0 /* 112 */
 
 char Target[80],Search[80],Dir[80],Answer[80];
 
@@ -324,6 +324,44 @@ void CreateMainView(void)
   SendMsg(&MyCard, CREATE, CREATE_FOCUS, 0);
 }
 
+
+char *FormatNum(unsigned long int num)
+{
+  static char buffer[33];
+  char *p=buffer;
+  int x,i;
+  int ch;
+
+  if (Base==10 && ((long int)num<0)) {
+    num = -num;
+    buffer[0]='-';
+    p++;
+    }
+
+  x = 0;
+
+  /* generate digits */
+  do {
+    ch = num % Base;
+    num /= Base;
+
+    ch+='0';
+    if (ch>'9')  ch+=7;
+    p[x++] = ch;
+  } while (num);
+
+  /* reverse them */
+  for (i=0; i<(x/2); i++) {
+    ch = p[i];
+    p[i] = p[x-i-1];
+    p[x-i-1] = ch;
+    }
+
+  p[x] = 0;
+  return buffer;
+}
+
+
 void ShowBase(void)
 {
   char far *basemsg;
@@ -335,6 +373,8 @@ void ShowBase(void)
     case 16: basemsg = fkeyHex; break;
     }
   /*(DrawText)(0,STACK_TOP/ *BOTTOM* /, basemsg,DRAW_NORM,FONT_SMALL);*/
+  (DrawText)(0,STACK_BOTTOM,FormatNum(depth),DRAW_NORM,FONT_SMALL);
+
 }
 
 
@@ -461,8 +501,27 @@ int ShowAll()
   }
 
   /* terminate string */
-
   buffer[80] = 0;
+
+  (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
+
+  if (depth > 80) {
+    for (i=80; i<160; i++) {
+      if (i < depth) {
+	ch = Stack[i];
+      } else {
+	ch = ' ';
+      }
+      buffer[i] = ch;
+    }
+
+    /* terminate string */
+    buffer[80] = 0;
+
+    (DrawText)(STACK_LEFT,STACK_TOP+10,buffer,DRAW_NORM,FONT_SMALL);
+
+  }
+
   /* terminate string */
   /* Stack[depth] = 0; */
   /*
@@ -471,46 +530,10 @@ int ShowAll()
   /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
 
   /*(DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);*/
-  (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
 }
 
 
 
-char *FormatNum(unsigned long int num)
-{
-  static char buffer[33];
-  char *p=buffer;
-  int x,i;
-  int ch;
-
-  if (Base==10 && ((long int)num<0)) {
-    num = -num;
-    buffer[0]='-';
-    p++;
-    }
-
-  x = 0;
-
-  /* generate digits */
-  do {
-    ch = num % Base;
-    num /= Base;
-
-    ch+='0';
-    if (ch>'9')  ch+=7;
-    p[x++] = ch;
-  } while (num);
-
-  /* reverse them */
-  for (i=0; i<(x/2); i++) {
-    ch = p[i];
-    p[i] = p[x-i-1];
-    p[x-i-1] = ch;
-    }
-
-  p[x] = 0;
-  return buffer;
-}
 
 char *FormatX(unsigned long int num)
 {
