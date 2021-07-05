@@ -447,13 +447,31 @@ int ShowChar(char c, int y)
 
 int ShowAll()
 {
+  char buffer[80+1];
+  int i,len;
+  char ch;
+
+  for (i=0; i<80; i++) {
+    if (i < depth) {
+      ch = Stack[i];
+    } else {
+      ch = ' ';
+    }
+    buffer[i] = ch;
+  }
+
   /* terminate string */
-  Stack[depth] = 0;
+
+  buffer[80] = 0;
+  /* terminate string */
+  /* Stack[depth] = 0; */
   /*
   (DrawText)(STACK_LEFT+(len2*CHAR_WIDTH(FONT_SMALL)),y,buffer,DRAW_NORM,FONT_SMALL);
   */
   /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
-  (DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);
+
+  /*(DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);*/
+  (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
 }
 
 
