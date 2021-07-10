@@ -172,7 +172,8 @@ void far DoDup(void);
 void Uninitialize(void);
 
 
-#define STACK_DEPTH 80*40
+#define STACK_DEPTH 80
+#define STACK_HEIGHT 40
 
 
 /******** Global state data *******/
@@ -182,7 +183,7 @@ CAPBLOCK CapData;         /* CAP application data block */
 
 /* Stuff we save in the .ENV */
 /*long int*/
-char Stack[STACK_DEPTH];
+char Stack[STACK_DEPTH*STACK_HEIGHT];
 int depth=0;
 int Base=10;
 
@@ -373,6 +374,8 @@ void ShowBase(void)
     case 16: basemsg = fkeyHex; break;
     }
   /*(DrawText)(0,STACK_TOP/ *BOTTOM* /, basemsg,DRAW_NORM,FONT_SMALL);*/
+
+  /* TODO: need to cast depth as unsigned long? */
   (DrawText)(0,STACK_BOTTOM,FormatNum(depth),DRAW_NORM,FONT_SMALL);
 
 }
@@ -487,7 +490,13 @@ int ShowChar(char c, int y)
 
 int ShowAll()
 {
-  char buffer[80+1];
+
+  /*
+  #define STACK_DEPTH 80
+  #define STACK_HEIGHT 40
+  */
+
+  char buffer[STACK_DEPTH+1];
   int i,len;
   char ch;
 
@@ -501,12 +510,12 @@ int ShowAll()
   }
 
   /* terminate string */
-  buffer[80] = 0;
+  buffer[STACK_DEPTH] = 0;
 
   (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
 
-  if (depth > 80) {
-    for (i=80; i<160; i++) {
+  if (depth > STACK_DEPTH) {
+    for (i=STACK_DEPTH; i<STACK_DEPTH*2; i++) {
       if (i < depth) {
 	ch = Stack[i];
       } else {
