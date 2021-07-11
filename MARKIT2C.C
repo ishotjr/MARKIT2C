@@ -36,92 +36,25 @@ char Target[80],Search[80],Dir[80],Answer[80];
 char far *msgTestApp="MarkIt2C";
 char far *msgAppTopLine="MarkIt Markdown Editor";
 
-char far *fkeyHex="Hex";
-char far *fkeyDec="Dec";
-char far *fkeyOct="Oct";
-char far *fkeyBin="Bin";
-char far *fkeyXor="Xor";
-char far *fkeyAnd="And";
-char far *fkeyOr ="Or";
-char far *fkeyNot="Not";
-char far *fkeySwp="Swap";
-char far *fkeyRll="R ";
+char far *fkeyQuit="Quit";
 char far *menuHex="New\tF1";
 char far *menuDec="Open\tF2";
 char far *menuOct="Save\tF3";
 char far *menuBin="Save As\tF4";
-char far *menuAnd="And\tF5";
-char far *menuOr="Or\tF6";
-char far *menuXor="Xor\tF7";
-char far *menuNot="Not\tF8";
-char far *menuAdd="Add\t+";
-char far *menuSub="Subtract\t-";
-char far *menuMult="Multiply\t*";
-char far *menuDiv="Divide\t/";
-char far *menuChs="Change Sign\tL";
-char far *menuShl="Shift Left\t";
-char far *menuShr="Shift Right\t\032";
-char far *menuLogical="Logical";
-char far *menuArithmetic="Arithmetic";
-char far *menuMisc="Miscellaneous";
-char far *menuDrop="Drop\tBackspace";
-char far *menuDup="Dup\tEnter";
-char far *menuSwap="Swap\tF9";
-char far *menuRoll="Roll\tF10";
-char far *menuOver="Over\tO";
-char far *menuClear="Clear\tEsc";
 char far *menuBase="File";
-char far *menuOperation="Operation";
-char far *menuStack="Stack";
 char far *menuQuit="&Quit";
 
-char far *msgENVName="C:\\_DAT\\HC2.ENV";
+char far *msgENVName="C:\\_DAT\\MARKIT2C.ENV";
 
 char far *msgNull="";
 
 char far **StringTable[]={
 &msgTestApp,
 &msgAppTopLine,
-&fkeyHex,
-&fkeyDec,
-&fkeyOct,
-&fkeyBin,
-&fkeyXor,
-&fkeyAnd,
-&fkeyOr,
-&fkeyNot,
-&fkeySwp,
-&fkeyRll,
+&fkeyQuit,
 &menuQuit,
 &msgENVName,
 &msgNull,
-&menuHex,
-&menuDec,
-&menuOct,
-&menuBin,
-&menuAnd,
-&menuOr,
-&menuXor,
-&menuNot,
-&menuAdd,
-&menuSub,
-&menuMult,
-&menuDiv,
-&menuChs,
-&menuShl,
-&menuShr,
-&menuLogical,
-&menuArithmetic,
-&menuMisc,
-&menuDrop,
-&menuDup,
-&menuSwap,
-&menuRoll,
-&menuOver,
-&menuClear,
-&menuBase,
-&menuOperation,
-&menuStack,
 &menuQuit,
 };
 
@@ -175,16 +108,16 @@ long int temp;
 int startnumber=1;
 
 FKEY MyFKeys[]= {
- {  &fkeyHex,	 DoQuit,	    1,		0 },
- {  &fkeyDec,	 DoQuit,	    2,		 0 },
- {  &fkeyOct,	 DoQuit,	    3,		 0 },
- {  &fkeyBin,	 DoQuit,	    4,		 0 },
- {  &fkeyAnd,	 DoQuit,	    5,		 0 },
- {  &fkeyOr,	 DoQuit,	    6,		 0 },
- {  &fkeyXor,	 DoQuit,	    7,		 0 },
- {  &fkeyNot,	 DoQuit,	    8,		 0 },
- {  &fkeySwp,	 DoQuit,	    9,		 0 },
- {  &fkeyRll,	 DoQuit,	   10+LAST_FKEY, 0 }
+ {  &fkeyQuit,	 DoQuit,	    1,		0 },
+ {  &fkeyQuit,	 DoQuit,	    2,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    3,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    4,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    5,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    6,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    7,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    8,		 0 },
+ {  &fkeyQuit,	 DoQuit,	    9,		 0 },
+ {  &fkeyQuit,	 DoQuit,	   10+LAST_FKEY, 0 }
 };
 
 /******* Menu structures *******/
@@ -305,14 +238,8 @@ void ShowLog(void)
 
 void ShowBase(void)
 {
-  char far *basemsg;
+  char far *basemsg = "BASE\0";
 
-  switch (Base) {
-    case 2:  basemsg = fkeyBin; break;
-    case 8:  basemsg = fkeyOct; break;
-    case 10: basemsg = fkeyDec; break;
-    case 16: basemsg = fkeyHex; break;
-    }
   /*(DrawText)(0,STACK_TOP/ *BOTTOM* /, basemsg,DRAW_NORM,FONT_SMALL);*/
 
   /* TODO: need to cast depth as unsigned long? */
