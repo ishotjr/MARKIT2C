@@ -11,7 +11,10 @@
 #include "interfac.h"    /* System manager includes for interface */
 #include "event.h"       /* and event types */
 #include "cougraph.h"
-#include "lstring.h"     /* Include long string functions */
+
+#include <string.h>
+
+#include "lstring.h"	 /* Include long string functions */
 #include "chtype.h"
 #include "dosfile.h"
 #include "dtn_edit.h"
@@ -186,6 +189,7 @@ CAPBLOCK CapData;         /* CAP application data block */
 char Stack[STACK_DEPTH*STACK_HEIGHT];
 int depth=0;
 int Base=10;
+char Log[STACK_DEPTH] = "log\0";
 
 
 BOOL Done;                /* Global flag for program termination */
@@ -362,6 +366,11 @@ char *FormatNum(unsigned long int num)
   return buffer;
 }
 
+void ShowLog(void)
+{
+  (DrawText)(0,STACK_BOTTOM+10,Log,DRAW_NORM,FONT_SMALL);
+}
+
 
 void ShowBase(void)
 {
@@ -500,6 +509,7 @@ int ShowAll()
   int i,len;
   char ch;
 
+  strcpy(Log, "first row");
   for (i=0; i<80; i++) {
     if (i < depth) {
       ch = Stack[i];
@@ -514,6 +524,7 @@ int ShowAll()
 
   (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
 
+  strcpy(Log, "second row");
   if (depth > STACK_DEPTH) {
     for (i=STACK_DEPTH; i<STACK_DEPTH*2; i++) {
       if (i < depth) {
@@ -539,10 +550,9 @@ int ShowAll()
   /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
 
   /*(DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);*/
+
+  strcpy(Log, "done");
 }
-
-
-
 
 char *FormatX(unsigned long int num)
 {
@@ -955,6 +965,7 @@ ProcessDigit:
 		 }
        Redisplay(depth);
        ShowBase();
+       ShowLog();
        break;
 
     }
