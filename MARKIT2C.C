@@ -37,11 +37,11 @@ char far *msgTestApp="MarkIt2C";
 char far *msgAppTopLine="MarkIt Markdown Editor";
 
 char far *fkeyQuit="Quit";
-char far *menuHex="New\tF1";
-char far *menuDec="Open\tF2";
-char far *menuOct="Save\tF3";
-char far *menuBin="Save As\tF4";
-char far *menuBase="File";
+char far *menuNew="New\tF1";
+char far *menuOpen="Open\tF2";
+char far *menuSave="Save\tF3";
+char far *menuSaveAs="Save As\tF4";
+char far *menuFile="File";
 char far *menuQuit="&Quit";
 
 char far *msgENVName="C:\\_DAT\\MARKIT2C.ENV";
@@ -126,16 +126,16 @@ FKEY MyFKeys[]= {
 // End of menu indicated by null record.
 
 MENU BaseMenu[] = {
- { &menuHex,	   DoQuit, 0 ,0, NO_HELP},
- { &menuDec,	   DoQuit, 0 ,0, NO_HELP},
- { &menuOct,	   DoQuit, 0 ,0, NO_HELP},
- { &menuBin,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuNew,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuOpen,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuSave,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuSaveAs,	   DoQuit, 0 ,0, NO_HELP},
  { 0, 0, 0, 0}
 };
 
 /**** TopMenu "hangs" all the previous menus off itself with MENU_PULLDOWN ****/
 MENU TopMenu[] = {
- { &menuBase,      (PFUNC) BaseMenu,     0, MENU_PULLDOWN },
+ { &menuFile,	    (PFUNC) BaseMenu,	  0, MENU_PULLDOWN },
   { &menuQuit,	    DoQuit,		  0 },
  { 0, 0, 0, 0}
 };
