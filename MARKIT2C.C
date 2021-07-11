@@ -1,8 +1,6 @@
-/* SCCS info - Module %M%  Version %I%  Date %G%  Time %U% */
-
-/*************
- ** HexCalc **
- *************/
+/**************
+ ** MarkIT2C **
+ **************/
 
 /******** Include header files *******/
 
@@ -150,27 +148,6 @@ char cursordata[]={
 int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra);
 
 void far DoQuit(void);
-void far DoHex(void);
-void far DoDec(void);
-void far DoOct(void);
-void far DoBin(void);
-void far DoAnd(void);
-void far DoOr(void);
-void far DoXor(void);
-void far DoNot(void);
-void far DoShl(void);
-void far DoShr(void);
-void far DoChs(void);
-void far DoAdd(void);
-void far DoSub(void);
-void far DoMult(void);
-void far DoDiv(void);
-void far DoSwap(void);
-void far DoRoll(void);
-void far DoClear(void);
-void far DoOver(void);
-void far DoDrop(void);
-void far DoDup(void);
 
 void Uninitialize(void);
 
@@ -198,16 +175,16 @@ long int temp;
 int startnumber=1;
 
 FKEY MyFKeys[]= {
- {  &fkeyHex,    DoHex,              1,           0 },
- {  &fkeyDec,    DoDec,              2,           0 },
- {  &fkeyOct,    DoOct,              3,           0 },
- {  &fkeyBin,    DoBin,              4,           0 },
- {  &fkeyAnd,    DoAnd,              5,           0 },
- {  &fkeyOr,     DoOr,               6,           0 },
- {  &fkeyXor,    DoXor,              7,           0 },
- {  &fkeyNot,    DoNot,              8,           0 },
- {  &fkeySwp,    DoSwap,             9,           0 },
- {  &fkeyRll,    DoRoll,            10+LAST_FKEY, 0 }
+ {  &fkeyHex,	 DoQuit,	    1,		0 },
+ {  &fkeyDec,	 DoQuit,	    2,		 0 },
+ {  &fkeyOct,	 DoQuit,	    3,		 0 },
+ {  &fkeyBin,	 DoQuit,	    4,		 0 },
+ {  &fkeyAnd,	 DoQuit,	    5,		 0 },
+ {  &fkeyOr,	 DoQuit,	    6,		 0 },
+ {  &fkeyXor,	 DoQuit,	    7,		 0 },
+ {  &fkeyNot,	 DoQuit,	    8,		 0 },
+ {  &fkeySwp,	 DoQuit,	    9,		 0 },
+ {  &fkeyRll,	 DoQuit,	   10+LAST_FKEY, 0 }
 };
 
 /******* Menu structures *******/
@@ -216,62 +193,16 @@ FKEY MyFKeys[]= {
 // End of menu indicated by null record.
 
 MENU BaseMenu[] = {
- { &menuHex,       DoHex, 0 ,0, NO_HELP},
- { &menuDec,       DoDec, 0 ,0, NO_HELP},
- { &menuOct,       DoOct, 0 ,0, NO_HELP},
- { &menuBin,       DoBin, 0 ,0, NO_HELP},
+ { &menuHex,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuDec,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuOct,	   DoQuit, 0 ,0, NO_HELP},
+ { &menuBin,	   DoQuit, 0 ,0, NO_HELP},
  { 0, 0, 0, 0}
 };
-
-MENU LogicalMenu[] = {
- { &menuAnd,       DoAnd, 0 ,0, NO_HELP},
- { &menuOr,        DoOr, 0 ,0, NO_HELP},
- { &menuXor,       DoXor, 0 ,0, NO_HELP},
- { &menuNot,       DoNot, 0 ,0, NO_HELP},
- { 0, 0, 0, 0}
-};
-
-MENU ArithMenu[] = {
- { &menuAdd,       DoAdd, 0 ,0, NO_HELP},
- { &menuSub,       DoSub, 0 ,0, NO_HELP},
- { &menuMult,       DoMult, 0 ,0, NO_HELP},
- { &menuDiv,       DoDiv, 0 ,0, NO_HELP},
- { 0, 0, 0, 0}
-};
-
-MENU MiscMenu[] = {
- { &menuChs,       DoChs, 0 ,0, NO_HELP},
- { &menuShl,       DoShl, 0 ,0, NO_HELP},
- { &menuShr,       DoShr, 0 ,0, NO_HELP},
- { 0, 0, 0, 0}
-};
-
-
-MENU OpMenu[] = {
- { &menuLogical,      (PFUNC) LogicalMenu,     0, MENU_PULLDOWN },
- { &menuArithmetic,   (PFUNC) ArithMenu,       0, MENU_PULLDOWN },
- { &menuMisc,         (PFUNC) MiscMenu,        0, MENU_PULLDOWN },
- { 0, 0, 0, 0}
-};
-
-MENU StackMenu[] = {
- { &menuDrop,       DoDrop, 0 ,0, NO_HELP},
- { &menuDup,        DoDup, 0 ,0, NO_HELP},
- { &menuSwap,       DoSwap, 0 ,0, NO_HELP},
- { &menuRoll,       DoRoll, 0 ,0, NO_HELP},
- { &menuOver,       DoOver, 0 ,0, NO_HELP},
- { &menuClear,      DoClear, 0 ,0, NO_HELP},
- { 0, 0, 0, 0}
-};
-
 
 /**** TopMenu "hangs" all the previous menus off itself with MENU_PULLDOWN ****/
 MENU TopMenu[] = {
  { &menuBase,      (PFUNC) BaseMenu,     0, MENU_PULLDOWN },
-/*
-  { &menuOperation, (PFUNC) OpMenu,	  0, MENU_PULLDOWN },
- { &menuStack,     (PFUNC) StackMenu,    0, MENU_PULLDOWN },
-*/
   { &menuQuit,	    DoQuit,		  0 },
  { 0, 0, 0, 0}
 };
@@ -608,212 +539,6 @@ void Redisplay(int deep)
     }
 }
 
-void far DoHex(void)
-{
-  Base=16;
-  ShowBase();
-  startnumber=1;
-  Redisplay(depth);
-}
-
-void far DoDec(void)
-{
-  Base=10;
-  ShowBase();
-  startnumber=1;
-  Redisplay(depth);
-}
-
-void far DoOct(void)
-{
-  Base=8;
-  ShowBase();
-  startnumber=1;
-  Redisplay(depth);
-}
-
-void far DoBin(void)
-{
-  Base=2;
-  ShowBase();
-  startnumber=1;
-  Redisplay(depth);
-}
-
-void far DoAnd(void)
-{
-  if (depth<2)  return;
-  err=0;
-  temp = PopStack(&err)&PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoOr(void)
-{
-  if (depth<2)  return;
-  err=0;
-  temp = PopStack(&err)|PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoXor(void)
-{
-  if (depth<2)  return;
-  err=0;
-  temp = PopStack(&err)^PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoNot(void)
-{
-  if (depth<1)  return;
-  err=0;
-  temp = ~PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(1);
-}
-
-void far DoChs(void)
-{
-  if (depth<1)  return;
-  err=0;
-  temp = -PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(1);
-}
-
-void far DoShl(void)
-{
-  if (depth<1)  return;
-  err=0;
-  temp = PopStack(&err)*2;
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(1);
-}
-
-void far DoShr(void)
-{
-  if (depth<1)  return;
-  err=0;
-  temp = PopStack(&err)/2;
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(1);
-}
-
-void far DoMult(void)
-{
-  if (depth<2)  return;
-  err=0;
-  temp = PopStack(&err)*PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoAdd(void)
-{
-  if (depth<2)  return;
-  err=0;
-  temp = PopStack(&err)+PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoSub(void)
-{
-  if (depth<2)  return;
-  err=0;
-  temp = -PopStack(&err)+PopStack(&err);
-  if (!err) PushStack(temp);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoDiv(void)
-{
-  long int top;
-  long int bottom;
-
-  if (depth<2)  return;
-  err=0;
-  bottom = PopStack(&err);
-  top = PopStack(&err);
-
-  if (bottom) {
-    temp = top/bottom;
-    if (!err) PushStack(temp);
-    }
-  else {
-    /*m_beep();*/
-    PushStack(top);
-    PushStack(bottom);
-    }
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoSwap(void)
-{
-  if (depth<2)  return;
-  temp = Stack[depth-1];
-  Stack[depth-1] = Stack[depth-2];
-  Stack[depth-2] = temp;
-
-  startnumber=1;
-  Redisplay(2);
-}
-
-void far DoDup(void)
-{
-  if (depth<1)  return;
-  PushStack(Stack[depth-1]);
-  startnumber=1;
-  Redisplay(depth+1);
-}
-
-void far DoClear(void)
-{
-  depth=0;
-  startnumber=1;
-  SendMsg(&MyCard,DRAW,DRAW_ALL,0);
-}
-
-void far DoDrop(void)
-{
-  if (depth)  PopStack(&err);
-  Redisplay(depth);
-}
-
-void far DoOver(void)
-{
-  if (depth<2)  return;
-
-  PushStack(Stack[depth-2]);
-  Redisplay(depth);
-}
-
-void far DoRoll(void)
-{
-  if (depth<3)  return;
-  temp = Stack[depth-1];
-  Stack[depth-1] = Stack[depth-2];
-  Stack[depth-2] = Stack[depth-3];
-  Stack[depth-3] = temp;
-
-  startnumber=1;
-  Redisplay(3);
-}
 
 int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
 {
@@ -835,119 +560,6 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
       if (depth == 0) {
 	depth = 1;
       }
-
-      /*
-      switch (Data) {
-        case LEFTKEY:
-          DoShl(); return TRUE;
-        case RIGHTKEY:
-          DoShr(); return TRUE;
-        case 'O':
-          DoOver(); return TRUE;
-        case 'L':
-          DoChs(); return TRUE;
-        case '*':
-          DoMult(); return TRUE;
-        case '/':
-          DoDiv(); return TRUE;
-        case '-':
-          DoSub(); return TRUE;
-        case '+':
-          DoAdd(); return TRUE;
-        case '^':
-          DoXor(); return TRUE;
-        case '|':
-          DoOr(); return TRUE;
-        case '&':
-          DoAnd(); return TRUE;
-        case '~':
-          DoNot(); return TRUE;
-
-        case 27:
-          if (startnumber)
-            DoClear();
-          else {
-            startnumber=1; Cursor(0); DoDrop();
-            }
-          return TRUE;
-
-        case 13:
-          if (startnumber)
-            DoDup();
-          else {
-            startnumber=1; Cursor(0);
-            }
-          return TRUE;
-
-
-        case 8:
-          if (depth && !Stack[depth-1])  startnumber=1;
-
-          if (!depth || startnumber) {
-            if (depth)  PopStack(&err);
-            Redisplay(depth);
-            }
-          else {
-            PushStack(PopStack(&err)/Base);
-            Redisplay(1);
-            }
-          return TRUE;
-
-        case '0':
-        case '1':
-          Data -= '0';
-ProcessDigit:
-          if (startnumber || !depth) {
-            startnumber=1;
-            PushStack(0);
-            }
-
-          PushStack(PopStack(&err)*Base+Data);
-          Redisplay(startnumber?depth:1);
-          Cursor(1);
-          startnumber=0;
-          return TRUE;
-
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-          if (Base<8)
-            DoBeep();
-          else {
-            Data -= '0';
-            goto ProcessDigit;
-            }
-          return TRUE;
-
-        case '8':
-        case '9':
-          if (Base<10)
-            DoBeep();
-          else {
-            Data -= '0';
-            goto ProcessDigit;
-            }
-          return TRUE;
-
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-          if (Base<16)
-            DoBeep();
-          else {
-            Data -= 'A'-10;
-            goto ProcessDigit;
-            }
-          return TRUE;
-        }
-      break;
-      */
 
     case DRAW:
        if (Data&DRAW_FRAME) {
