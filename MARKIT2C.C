@@ -236,12 +236,8 @@ void ShowLog(void)
 }
 
 
-void ShowBase(void)
+void ShowDepth(void)
 {
-  char far *basemsg = "BASE\0";
-
-  /*(DrawText)(0,STACK_TOP/ *BOTTOM* /, basemsg,DRAW_NORM,FONT_SMALL);*/
-
   /* TODO: need to cast depth as unsigned long? */
   (DrawText)(0,STACK_BOTTOM,FormatNum(depth),DRAW_NORM,FONT_SMALL);
 
@@ -281,14 +277,14 @@ void Cursor(int on)
 }
 
 
-void PushStack(/*long int*/ char num)
+void PushStack(WORD num)
 {
   strcpy(Log, "PushStack()");
-  /*
-  if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = num;
-  */
-  if (depth<STACK_DEPTH)	    Stack[depth++] = num;
 
+  if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = num;
+  /*
+  if (depth<STACK_DEPTH)	    Stack[depth++] = (char)num;
+    */
 }
 
 /*long int*/
@@ -382,8 +378,11 @@ int ShowAll()
 
   (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
 
-  strcpy(Log, "second row");
+
   if (depth > STACK_DEPTH) {
+    strcpy(Log, "second row");
+
+/*
     for (i=STACK_DEPTH; i<STACK_DEPTH*2; i++) {
       if (i < depth) {
 	ch = Stack[i];
@@ -393,9 +392,9 @@ int ShowAll()
       buffer[i] = ch;
     }
 
-    /* terminate string */
+    / * terminate string * /
     buffer[STACK_DEPTH] = 0;
-
+*/
     (DrawText)(STACK_LEFT,STACK_TOP+10,buffer,DRAW_NORM,FONT_SMALL);
 
   }
@@ -407,7 +406,9 @@ int ShowAll()
 
   /*(DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);*/
 
+  /*
   strcpy(Log, "done");
+  */
 }
 
 void Redisplay(int deep)
@@ -468,7 +469,7 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
 	 */
 		 }
        Redisplay(depth);
-       ShowBase();
+       ShowDepth();
        ShowLog();
        break;
 
@@ -547,7 +548,7 @@ void LoadENV(void)
   if (e!=sizeof(Base)) {
 BadEnv:
     depth=0;
-    PushStack(0);      /* Start off showing something (if very first time)*/
+    /*PushStack(0);*/	/* Start off showing something (if very first time)*/
     startnumber=0;
     }
 }
