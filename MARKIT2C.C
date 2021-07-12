@@ -86,7 +86,7 @@ void Uninitialize(void);
 
 
 #define STACK_DEPTH 80
-#define STACK_HEIGHT 3 /*40*/
+#define STACK_HEIGHT 10 /*40*/
 
 
 /******** Global state data *******/
@@ -279,12 +279,9 @@ void Cursor(int on)
 
 void PushStack(WORD num)
 {
-  strcpy(Log, "PushStack()");
+  /*strcpy(Log, "PushStack()");*/
 
-  if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = num;
-  /*
-  if (depth<STACK_DEPTH)	    Stack[depth++] = (char)num;
-    */
+  if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = (char)num;
 }
 
 /*long int*/
@@ -360,55 +357,29 @@ int ShowAll()
 {
 
   char buffer[STACK_DEPTH+1];
-  int i,len;
+  int i,len,row;
   char ch;
 
-  strcpy(Log, "first row");
-  for (i=0; i<80; i++) {
-    if (i < depth) {
-      ch = Stack[i];
-    } else {
-      ch = ' ';
-    }
-    buffer[i] = ch;
-  }
+  int rows = depth / STACK_DEPTH;
+  sprintf(Log, "%d rows", rows);
 
-  /* terminate string */
-  buffer[STACK_DEPTH] = 0;
+  for (row=0; row<=rows; row++) {
 
-  (DrawText)(STACK_LEFT,STACK_TOP,buffer,DRAW_NORM,FONT_SMALL);
-
-
-  if (depth > STACK_DEPTH) {
-    strcpy(Log, "second row");
-
-/*
-    for (i=STACK_DEPTH; i<STACK_DEPTH*2; i++) {
+    for (i=0; i<STACK_DEPTH; i++) {
       if (i < depth) {
-	ch = Stack[i];
+	ch = Stack[i+(STACK_DEPTH*rows)];
       } else {
 	ch = ' ';
       }
       buffer[i] = ch;
     }
 
-    / * terminate string * /
+    /* terminate string */
     buffer[STACK_DEPTH] = 0;
-*/
-    (DrawText)(STACK_LEFT,STACK_TOP+10,buffer,DRAW_NORM,FONT_SMALL);
+
+    (DrawText)(STACK_LEFT,STACK_TOP+(10*rows),buffer,DRAW_NORM,FONT_SMALL);
 
   }
-
-  /* terminate string */
-  /* Stack[depth] = 0; */
-
-  /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
-
-  /*(DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);*/
-
-  /*
-  strcpy(Log, "done");
-  */
 }
 
 void Redisplay(int deep)
