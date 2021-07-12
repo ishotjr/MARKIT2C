@@ -28,7 +28,7 @@
 #define  TITLE_HEIGHT 10
 
 #define STACK_TOP     14
-#define STACK_BOTTOM 174
+#define STACK_BOTTOM 160 /* 174 */
 #define STACK_LEFT     0 /* 112 */
 
 char Target[80],Search[80],Dir[80],Answer[80];
@@ -86,7 +86,7 @@ void Uninitialize(void);
 
 
 #define STACK_DEPTH 80
-#define STACK_HEIGHT 40
+#define STACK_HEIGHT 3 /*40*/
 
 
 /******** Global state data *******/
@@ -283,7 +283,12 @@ void Cursor(int on)
 
 void PushStack(/*long int*/ char num)
 {
-  if (depth<STACK_DEPTH)  Stack[depth++] = num;
+  strcpy(Log, "PushStack()");
+  /*
+  if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = num;
+  */
+  if (depth<STACK_DEPTH)	    Stack[depth++] = num;
+
 }
 
 /*long int*/
@@ -358,11 +363,6 @@ int ShowChar(char c, int y)
 int ShowAll()
 {
 
-  /*
-  #define STACK_DEPTH 80
-  #define STACK_HEIGHT 40
-  */
-
   char buffer[STACK_DEPTH+1];
   int i,len;
   char ch;
@@ -394,7 +394,7 @@ int ShowAll()
     }
 
     /* terminate string */
-    buffer[80] = 0;
+    buffer[STACK_DEPTH] = 0;
 
     (DrawText)(STACK_LEFT,STACK_TOP+10,buffer,DRAW_NORM,FONT_SMALL);
 
@@ -402,47 +402,13 @@ int ShowAll()
 
   /* terminate string */
   /* Stack[depth] = 0; */
-  /*
-  (DrawText)(STACK_LEFT+(len2*CHAR_WIDTH(FONT_SMALL)),y,buffer,DRAW_NORM,FONT_SMALL);
-  */
+
   /* (DrawText)(STACK_LEFT,y,buffer,DRAW_NORM,FONT_SMALL); */
 
   /*(DrawText)(STACK_LEFT,STACK_TOP,Stack,DRAW_NORM,FONT_SMALL);*/
 
   strcpy(Log, "done");
 }
-
-char *FormatX(unsigned long int num)
-{
-  static char buffer[33];
-  char *p=buffer;
-  int x,i;
-  int ch;
-
-  x = 0;
-
-  /* generate digits */
-  do {
-    ch = num % Base;
-    num /= Base;
-
-    ch+='0';
-    if (ch>'9')  ch+=7;
-    p[x++] = ch;
-  } while (num);
-
-  /* reverse them */
-  for (i=0; i<(x/2); i++) {
-    ch = p[i];
-    p[i] = p[x-i-1];
-    p[x-i-1] = ch;
-    }
-
-  p[x] = 0;
-  return buffer;
-}
-
-
 
 void Redisplay(int deep)
 {
@@ -454,7 +420,6 @@ void Redisplay(int deep)
   for (i=0; i<=deep; i++) {
     if (i<depth)
       /* ShowEntry(FormatNum(Stack[depth-i-1]),y); */
-      /* ShowEntry(FormatX(Stack[depth-i-1]),y); */
       /* ShowChar(Stack[depth-i-1],y); */
       ShowAll();
 
