@@ -125,7 +125,7 @@ FKEY MyFKeys[]= {
 // MENU = { {Title, Handler, HotKey, Style}, ...}
 // End of menu indicated by null record.
 
-MENU BaseMenu[] = {
+MENU FileMenu[] = {
  { &menuNew,	   DoQuit, 0 ,0, NO_HELP},
  { &menuOpen,	   DoQuit, 0 ,0, NO_HELP},
  { &menuSave,	   DoQuit, 0 ,0, NO_HELP},
@@ -135,7 +135,7 @@ MENU BaseMenu[] = {
 
 /**** TopMenu "hangs" all the previous menus off itself with MENU_PULLDOWN ****/
 MENU TopMenu[] = {
- { &menuFile,	    (PFUNC) BaseMenu,	  0, MENU_PULLDOWN },
+ { &menuFile,	    (PFUNC) FileMenu,	  0, MENU_PULLDOWN },
   { &menuQuit,	    DoQuit,		  0 },
  { 0, 0, 0, 0}
 };
@@ -281,7 +281,7 @@ void PushStack(WORD num)
 {
   /*strcpy(Log, "PushStack()");*/
 
-  if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = (char)num;
+  if (depth < (STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = (char)num;
 }
 
 void PadToDepth(int newdepth)
@@ -289,7 +289,7 @@ void PadToDepth(int newdepth)
   // TODO: ADD CHECK!!
   //if (depth<(STACK_DEPTH*STACK_HEIGHT))
 
-  for (;depth<=newdepth;) {
+  while (depth < newdepth) {
     PushStack(' ');
   }
 
@@ -431,7 +431,7 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
 	    break;
 	  case 13:
 	    // pad to EOL
-	    PadToDepth(depth+(STACK_DEPTH-(depth%STACK_DEPTH))-1);
+	    PadToDepth(depth+(STACK_DEPTH-(depth%STACK_DEPTH)));
 	    //depth+=STACK_DEPTH;
 	    break;
 	}
