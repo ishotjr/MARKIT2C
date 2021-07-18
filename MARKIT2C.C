@@ -284,6 +284,19 @@ void PushStack(WORD num)
   if (depth<(STACK_DEPTH*STACK_HEIGHT))	Stack[depth++] = (char)num;
 }
 
+void PadToDepth(int newdepth)
+{
+  // TODO: ADD CHECK!!
+  //if (depth<(STACK_DEPTH*STACK_HEIGHT))
+
+  for (;depth<=newdepth;) {
+    PushStack(' ');
+  }
+
+}
+
+
+
 /*long int*/
 char PopStack(int *err)
 {
@@ -417,7 +430,9 @@ int far MyCardHandler(PWINDOW Wnd, WORD Message, WORD Data, WORD Extra)
 	    depth--;
 	    break;
 	  case 13:
-	    depth+=40;
+	    // pad to EOL
+	    PadToDepth(depth+(STACK_DEPTH-(depth%STACK_DEPTH))-1);
+	    //depth+=STACK_DEPTH;
 	    break;
 	}
       }
